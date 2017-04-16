@@ -4,6 +4,7 @@ app.controller('MainCtrl', [
 '$scope',
 function($scope){
   $scope.title = '';
+  $scope.link = '';
 
   $scope.posts = [
   {title: 'post 1', upvotes: 12},
@@ -14,7 +15,16 @@ function($scope){
 
   $scope.addPost = function(){
   	if ($scope.title === '') { return;}
-  	$scope.posts.push({title: $scope.title, upvotes: 36});
+  	$scope.posts.push({
+  		title: $scope.title,
+  		link: $scope.link,
+  		upvotes: 0
+  	});
   	$scope.title = '';
+  	$scope.link = '';
+  }
+
+  $scope.upvotePost = function(post){
+  	post.upvotes ++;
   }
 }]);
