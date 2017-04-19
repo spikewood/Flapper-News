@@ -27,3 +27,16 @@ Tells the terminal to run the shell script, resulting in "Hello, world!"
 regular expressions engine for the terminal
 > grep regex -modifier file.ext  
 The grep command takes in a regular expression, an optional modifier and the file(s) to look in
+
+# Building an express server
+1. make sure you have the express generator installed
+> $ npm install express-generator  
+2. navigate to the parent folder for your server
+3. Create an express project
+> $ express --ejs project-name  
+4. Install the npm modules to allow the server to run
+> $ npm install  
+5. Install mongoose for the mongo db
+> $ npm install --save mongoose  
+6. we need a folder for the mongoose models, so create that folder
+> $ mkdir models
