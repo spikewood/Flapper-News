@@ -5,6 +5,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// start the goose
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/news');
+
+// bring in the mongo schema for the posts and comments
+require('./models/Posts');
+require('./models/Comments');
+
 var index = require('./routes/index');
 var users = require('./routes/users');
 
