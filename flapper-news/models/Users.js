@@ -9,7 +9,7 @@ var jwt = require('jsonwebtoken');
 var UserSchema = new mongoose.Schema({
 	username: {type:String, lowercase:true, unique:true},
 	hash: String,
-	salt: String
+	salt: String,
 });
 
 // Functions to run in the schema go here
@@ -20,7 +20,7 @@ UserSchema.methods.setPassword = function(password) {
 	this.salt = crypto.randomBytes(16).toString('hex');
 
 	// encrypt password with the salt and hash 1000 times
-	this.hash = crypto.pbkdf2Sync(password, salt, 1000, 64).toString('hex');
+	this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
 }
 
 // validPassword method will set the password by salting the password and encrypting it

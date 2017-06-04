@@ -99,11 +99,11 @@ app
 	    auth.saveToken(data.token);
 	  });
 	};
-	
+
 	// login saves the token to the window
 	auth.logIn = function(user) {
 		return $http.post('/login', user).success(function(data) {
-			auth.saveToken(data, token);
+			auth.saveToken(data.token);
 		});
 	};
 
@@ -120,6 +120,7 @@ app
 	'$scope',
 	'$state',
 	'auth',
+
 	function($scope, $state, auth){
 	  $scope.user = {};
 
@@ -150,8 +151,8 @@ app
 	  $scope.logOut = auth.logOut;
 }])
 
-// app factory for storing data between views
-.factory('posts', ['$http', function($http){
+// app factory for posts
+.factory('posts', ['$http', 'auth', function($http, auth){
   var o = {
     posts: []
   };
@@ -169,27 +170,34 @@ app
 	};
 
 	o.addComment = function(id, comment) {
-		return $http.post('/posts/' + id + '/comments', comment);
+		return $http.post('/posts/' + id + '/comments', comment, {
+    	headers: {Authorization: 'Bearer ' + auth.getToken()}
+  		});
 	};
 
   o.create = function(post) {
-  	return $http.post('/posts', post).success(function(data){
+  	return $http.post('/posts', post, {
+    	headers: {Authorization: 'Bearer ' + auth.getToken()}
+  		})
+  		.success(function(data){
     	o.posts.push(data);
   	});
 	};
 
   o.upvote = function(post) {
-  return $http.put('/posts/' + post._id + '/upvote')
-    .success(function(data){
+  return $http.put('/posts/' + post._id + '/upvote', null, {
+    	headers: {Authorization: 'Bearer ' + auth.getToken()}
+  		})
+    	.success(function(data){
       post.upvotes += 1;
     });
 	};
 
 	o.upvoteComment = function(post, comment) {
-	  console.log('this is the: ',post);
-	  console.log('this is the: ',comment);
-	  return $http.put('/posts/' + post._id + '/comments/'+ comment._id + '/upvote')
-	    .success(function(data){
+	  return $http.put('/posts/' + post._id + '/comments/'+ comment._id + '/upvote', null, {
+    	headers: {Authorization: 'Bearer ' + auth.getToken()}
+  		})
+	    .success(function(data) {
 	      comment.upvotes += 1;
 	    });
 	};
@@ -201,13 +209,15 @@ app
 .controller('MainCtrl', [
 	'$scope',
 	'posts',
+	'auth',
 
 	// allow users to fill out new posts
-	function($scope, posts){
+	function($scope, posts, auth){
 		// init scope variables
 		$scope.title = '';
 		$scope.link = '';
 		$scope.posts = posts.posts;
+		$scope.isLoggedIn = auth.isLoggedIn;
 
 		$scope.addPost = function(){
 			// prevent clicks of button from submitting empty posts
@@ -232,8 +242,11 @@ app
 	'$scope',
 	'posts',
 	'post',
-	function($scope, posts, post){
+	'auth',
+
+	function($scope, posts, post, auth){
 		$scope.post = post;
+		$scope.isLoggedIn = auth.isLoggedIn;
 
 		$scope.addComment = function(){
 		  if($scope.body === '') { return; }
@@ -247,13 +260,7 @@ app
 		};
 
 		$scope.incrementUpvotes = function(comment){
-  		console.log('before the upvote call post is: ', post);
-  		console.log('before the upvote call posts.upvoteComment is: ', posts.upvoteComment);
-  		console.log('before the upvote call comment is: ', comment);
   		posts.upvoteComment(post, comment);
-  		console.log('after the upvote call post is: ', post);
-  		console.log('after the upvote call posts is: ', posts);
-  		console.log('after the upvote call comment is: ', comment);
 		};
 	}
 ])
