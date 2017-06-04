@@ -57,6 +57,7 @@ app
 		$urlRouterProvider.otherwise('home');
 	}])
 
+// Auth Factory
 .factory('auth', ['$http', '$window', function($http, $window){
 	var auth = {};
 
@@ -98,16 +99,16 @@ app
 	    auth.saveToken(data.token);
 	  });
 	};
-
+	
 	// login saves the token to the window
-	auth.login = function(user) {
+	auth.logIn = function(user) {
 		return $http.post('/login', user).success(function(data) {
 			auth.saveToken(data, token);
 		});
 	};
 
 	// logout removes the token from the window
-	auth.logout = function() {
+	auth.logOut = function() {
 		$window.localStorage.removeItem('flapper-news-token');
 	};
 
@@ -122,13 +123,13 @@ app
 	function($scope, $state, auth){
 	  $scope.user = {};
 
-	  $scope.register = function(){
-	    auth.register($scope.user).error(function(error){
-	      $scope.error = error;
-	    }).then(function(){
-	      $state.go('home');
-	    });
-	  };
+		$scope.register = function(){
+		  auth.register($scope.user).error(function(error){
+		    $scope.error = error;
+		  }).then(function(){
+		    $state.go('home');
+		  });
+		};
 
 	  $scope.logIn = function(){
 	    auth.logIn($scope.user).error(function(error){
