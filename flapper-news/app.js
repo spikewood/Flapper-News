@@ -5,6 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// auth is nice
+var passport = require('passport');
+
 // start the goose
 var mongoose = require('mongoose');
 
@@ -13,6 +16,8 @@ mongoose.connect('mongodb://localhost/news');
 // bring in the mongo schema for the posts and comments
 require('./models/Posts');
 require('./models/Comments');
+require('./models/Users');
+require('./config/passport');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -30,6 +35,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
 
 app.use('/', index);
 app.use('/users', users);

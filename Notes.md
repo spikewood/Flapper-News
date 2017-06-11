@@ -40,3 +40,11 @@ The grep command takes in a regular expression, an optional modifier and the fil
 > $ npm install --save mongoose  
 6. we need a folder for the mongoose models, so create that folder
 > $ mkdir models
+
+# Mongoose
+## Models
+1. the models are found in the '/model' directory and build out how information should be stored in the mongo db - these are formalized schema to store data
+2. we route the data to the models in the '/routes/index.js'
+
+# Angular
+1. the angular app lives in '/public/javascripts/angularApp.js'
